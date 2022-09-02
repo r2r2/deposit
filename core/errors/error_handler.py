@@ -4,7 +4,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 
 
-async def validation_exception_handler(request: Request, exc: RequestValidationError):
+async def validation_exception_handler(request: Request, exc: RequestValidationError) -> JSONResponse:
     return JSONResponse(
         status_code=status.HTTP_400_BAD_REQUEST,
         content=jsonable_encoder({"error": f"Field [{exc.errors()[0]['loc'][1]}] - {exc.errors()[0]['msg']}"}),
