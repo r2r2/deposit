@@ -5,6 +5,8 @@
 ### To start project:
 > docker-compose pull && docker-compose build --no-cache && docker-compose up
 
+### To check API:
+> curl -i -H "Content-Type: application/json" -d '{ "date": "31.01.2021", "periods": 3, "amount": 10000, "rate": 6 }' http://0.0.0.0:8000/calculate
 
 ### Test coverage
 > pdm run coverage report -m
