@@ -1,7 +1,7 @@
-from pydantic import BaseModel, conint, confloat, ValidationError
+from pydantic import BaseModel, conint, confloat
 
 
-class DepositDto(BaseModel):
+class CalculateDto(BaseModel):
     date: str
     periods: conint(ge=1, le=60)
     amount: conint(ge=10_000, le=3_000_000)

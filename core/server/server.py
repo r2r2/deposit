@@ -27,8 +27,7 @@ class Server:
                     host="0.0.0.0",
                     port=8000,
                     workers=2,
-                    log_level="info",
-                    reload=True)
+                    log_level="info")
 
 
 router = Server().router
