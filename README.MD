@@ -3,7 +3,7 @@
 ***  
 
 ### To start project:
-> docker-compose build && docker-compose up
+> docker-compose pull && docker-compose build --no-cache && docker-compose up
 
 
 ### Test coverage

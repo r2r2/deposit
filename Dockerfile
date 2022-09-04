@@ -49,14 +49,9 @@ RUN pdm sync -v
 # copy project
 COPY . $APP_HOME
 
-# copy entrypoint.sh
-COPY ./entrypoint.sh $APP_HOME
-
 # chown all the files to the app user
 RUN chown -R app:app $APP_HOME
 
 # change to the app user
 USER app
 
-# run entrypoint.sh
-ENTRYPOINT ["/home/deposit/web/entrypoint.sh"]
