@@ -1,9 +1,9 @@
 import uvicorn
 from fastapi import FastAPI, APIRouter
 from fastapi.exceptions import RequestValidationError
-from settings import config
+from settings import Settings
 from core.errors.error_handler import validation_exception_handler
-from core.server.routes import calculate
+from core.server.api import calculate
 
 
 class Server:
@@ -22,7 +22,7 @@ class Server:
         self.app.add_exception_handler(RequestValidationError, validation_exception_handler)
 
     def run(self):
-        uvicorn.run("core.server.server:server.app", **config)
+        uvicorn.run("core.server.server:server.app", **Settings().uvicorn_config.dict())
 
 
 server = Server()

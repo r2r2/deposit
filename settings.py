@@ -1,10 +1,14 @@
 import os
+from pydantic import BaseSettings, BaseModel
 
 
-config = {
-    "host": "0.0.0.0",
-    "port": 8000,
-    "workers": 2,
-    # "workers": os.cpu_count(),
-    "log_level": "info",
-}
+class UvicornConfig(BaseModel):
+    host: str = '0.0.0.0'
+    port: int = 8000
+    # "workers": int = os.cpu_count()
+    workers: int = 2
+    log_level: str = "info"
+
+
+class Settings(BaseSettings):
+    uvicorn_config: UvicornConfig = UvicornConfig()
