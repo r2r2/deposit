@@ -1,5 +1,6 @@
 import os
-from pydantic import BaseSettings, BaseModel
+
+from pydantic import BaseModel, BaseSettings
 
 
 class UvicornConfig(BaseModel):

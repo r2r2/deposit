@@ -1,9 +1,10 @@
 import calendar
-from datetime import date, datetime, timedelta
+from datetime import date, datetime
+
 from fastapi.responses import JSONResponse
 
-from core.errors.exceptions import InconsistencyError
 from core.dto.dto import CalculateDto
+from core.errors.exceptions import InconsistencyError
 from core.utils.increment_date import add_months
 
 

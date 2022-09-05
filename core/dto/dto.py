@@ -1,4 +1,4 @@
-from pydantic import BaseModel, conint, confloat
+from pydantic import BaseModel, confloat, conint
 
 
 class CalculateDto(BaseModel):

@@ -1,9 +1,10 @@
 import uvicorn
-from fastapi import FastAPI, APIRouter
+from fastapi import APIRouter, FastAPI
 from fastapi.exceptions import RequestValidationError
-from settings import Settings
+
 from core.errors.error_handler import validation_exception_handler
 from core.server.api import calculate
+from settings import Settings
 
 
 class Server:
