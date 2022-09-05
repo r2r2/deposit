@@ -4,6 +4,7 @@ from fastapi.responses import JSONResponse
 
 from core.errors.exceptions import InconsistencyError
 from core.dto.dto import CalculateDto
+from core.utils.increment_date import add_months
 
 
 async def calculate(dto: CalculateDto) -> JSONResponse:
@@ -23,6 +24,6 @@ async def calculate(dto: CalculateDto) -> JSONResponse:
         ).strftime('%d.%m.%Y')
         dto.amount = dto.amount * dto.rate / 100 / 12 + dto.amount
         result.update({last_day_of_month: round(dto.amount, 2)})
-        date_py += timedelta(weeks=4)
+        date_py = add_months(date_py, 1)
 
     return JSONResponse(result)
