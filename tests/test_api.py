@@ -1,6 +1,22 @@
 class TestCalculate:
 
-    def test_calculate_ok(self, test_app):
+    def test_first_day_of_month(self, test_app):
+        req = {
+            "date": "01.01.2021",
+            "periods": 3,
+            "amount": 10000,
+            "rate": 6
+        }
+        resp = {
+            "01.01.2021": 10050.0,
+            "01.02.2021": 10100.25,
+            "01.03.2021": 10150.75
+        }
+        response = test_app.post("/calculate", json=req)
+        assert response.status_code == 200
+        assert response.json() == resp
+
+    def test_last_day_of_month(self, test_app):
         req = {
             "date": "31.01.2021",
             "periods": 3,
