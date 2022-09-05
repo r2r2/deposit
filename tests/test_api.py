@@ -1,6 +1,7 @@
 class TestCalculate:
-
+    """Test /calculate API"""
     def test_first_day_of_month(self, test_app):
+        """Testing correct output first day of month"""
         req = {
             "date": "01.01.2021",
             "periods": 3,
@@ -17,6 +18,10 @@ class TestCalculate:
         assert response.json() == resp
 
     def test_last_day_of_month(self, test_app):
+        """
+        Testing correct output of last day of month,
+        include correct output of February
+        """
         req = {
             "date": "31.01.2021",
             "periods": 3,
@@ -33,6 +38,7 @@ class TestCalculate:
         assert response.json() == resp
 
     def test_not_valid_date(self, test_app):
+        """Testing not a valid date format."""
         req = {
             "date": "31012021",
             "periods": 3,
@@ -47,6 +53,7 @@ class TestCalculate:
         assert response.json() == resp
 
     def test_not_valid_periods(self, test_app):
+        """Testing not valid periods"""
         req = {
             "date": "31.01.2021",
             "periods": 333,
@@ -61,6 +68,7 @@ class TestCalculate:
         assert response.json() == resp
 
     def test_not_valid_amount(self, test_app):
+        """Testing not valid amount"""
         req = {
             "date": "31.01.2021",
             "periods": 3,
@@ -75,6 +83,7 @@ class TestCalculate:
         assert response.json() == resp
 
     def test_not_valid_rate(self, test_app):
+        """Testing not valid rate"""
         req = {
             "date": "31.01.2021",
             "periods": 3,
@@ -89,6 +98,7 @@ class TestCalculate:
         assert response.json() == resp
 
     def test_empty_json(self, test_app):
+        """Testing if no data was provided."""
         req = {}
         resp = {
             "error": 'Field [date] - field required'
