@@ -8,5 +8,5 @@ class ApplicationError(HTTPException):
 
 
 class InconsistencyError(ApplicationError):
-    def __init__(self, detail: str | None = None, status_code: int = 409):
+    def __init__(self, detail: str | None = None, status_code: int = 400):
         super().__init__(detail=detail, status_code=status_code)
