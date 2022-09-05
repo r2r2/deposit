@@ -27,7 +27,7 @@ class TestCalculate:
             "detail": "You should provide date in format: dd.mm.YYYY"
         }
         response = test_app.post("/calculate", json=req)
-        assert response.status_code == 409
+        assert response.status_code == 400
         assert response.json() == resp
 
     def test_not_valid_periods(self, test_app):
