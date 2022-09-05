@@ -1,11 +1,11 @@
-import calendar
-from datetime import date, datetime
+from datetime import datetime
 
+from dateutil.relativedelta import *
 from fastapi.responses import JSONResponse
 
 from core.dto.dto import CalculateDto
 from core.errors.exceptions import InconsistencyError
-from core.utils.increment_date import add_months
+from settings import Settings
 
 
 async def calculate(dto: CalculateDto) -> JSONResponse:
@@ -15,16 +15,12 @@ async def calculate(dto: CalculateDto) -> JSONResponse:
     """
     result = dict()
     try:
-        date_py = datetime.strptime(dto.date, '%d.%m.%Y')
+        date_py = datetime.strptime(dto.date, Settings().date_format)
     except ValueError:
         raise InconsistencyError(detail="You should provide date in format: dd.mm.YYYY")
 
-    for _ in range(dto.periods):
-        last_day_of_month = date(
-            date_py.year, date_py.month, calendar.monthrange(date_py.year, date_py.month)[1]
-        ).strftime('%d.%m.%Y')
+    for num in range(dto.periods):
+        date_to_pay = date_py + relativedelta(months=+num)
         dto.amount = dto.amount * dto.rate / 100 / 12 + dto.amount
-        result.update({last_day_of_month: round(dto.amount, 2)})
-        date_py = add_months(date_py, 1)
-
+        result.update({date_to_pay.strftime(Settings().date_format): round(dto.amount, 2)})
     return JSONResponse(result)
