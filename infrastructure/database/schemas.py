@@ -22,6 +22,16 @@ class BankCreate(BankBase):
     pass
 
 
+class BankUpdate(BankBase):
+    bank_name: str | None
+    term_min: int | None
+    term_max: int | None
+    rate_min: float | None
+    rate_max: float | None
+    payment_min: int | None
+    payment_max: int | None
+
+
 class Bank(BankBase):
     term_min: int
     term_max: int

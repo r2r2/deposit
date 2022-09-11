@@ -14,7 +14,7 @@ async def create_bank(bank: schemas.Bank, db: Session = Depends(get_db)):
 
 
 async def read_banks(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    banks = crud.get_banks(db, skip=skip, limit=limit)
+    banks = await crud.get_banks(db, skip=skip, limit=limit)
     return banks
 
 
@@ -23,6 +23,15 @@ async def read_bank(bank_id: int, db: Session = Depends(get_db)):
     if db_bank is None:
         raise InconsistencyError(status_code=404, detail="Bank not found")
     return db_bank
+
+
+def patch_bank(bank_id: int, bank: schemas.BankUpdate, db: Session = Depends(get_db)):
+    db_bank = crud.get_bank(db, bank_id)
+    print(db_bank)
+    if db_bank is None:
+        raise InconsistencyError(status_code=404, detail="Bank not found")
+    bank = crud.update_bank(db, db_bank, bank)
+    return bank
 
 
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):

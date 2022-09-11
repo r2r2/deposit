@@ -1,9 +1,13 @@
+from infrastructure.database.database import database
+from sqlalchemy import select, update
 from sqlalchemy.orm import Session, Query
 
 from infrastructure.database import models, schemas
 
 
-def get_bank(db: Session, bank_id: int) -> Query:
+async def get_bank(db: Session, bank_id: int):
+    # return db.query(models.Bank).filter(models.Bank.id == bank_id).first()
+
     return db.query(models.Bank).filter(models.Bank.id == bank_id).first()
 
 
@@ -11,8 +15,11 @@ def get_bank_by_bank_name(db: Session, bank_name: str) -> Query:
     return db.query(models.Bank).filter(models.Bank.bank_name == bank_name).first()
 
 
-def get_banks(db: Session, skip: int = 0, limit: int = 100) -> Query:
-    return db.query(models.Bank).offset(skip).limit(limit).all()
+async def get_banks(db: Session, skip: int = 0, limit: int = 100) -> Query:
+    # return db.query(models.Bank).offset(skip).limit(limit).all()
+    query = db.query(models.Bank).offset(skip).limit(limit).all()
+    return await database.fetch_all(query)
+    # return db.query(models.Bank).offset(skip).limit(limit).all()
 
 
 def create_bank(db: Session, bank: schemas.Bank):
@@ -20,6 +27,19 @@ def create_bank(db: Session, bank: schemas.Bank):
     db.add(db_bank)
     db.commit()
     db.refresh(db_bank)
+    return db_bank
+
+
+def update_bank(db: Session, db_bank: models.Bank, bank: schemas.BankUpdate):
+    db.add(db_bank)
+    # db.query(db_bank).update(bank.dict())
+    # db.execute(update(db_bank), values=bank.dict())
+    db.execute(update(db_bank).where(models.Bank == db_bank.id).values(bank.dict()))
+    # db.execute(update(db_bank).values(bank.dict()))
+    # db_bank.update().values(bank.dict())
+    db.commit()
+    db.refresh(db_bank)
+    # session.execute(update(User).where(User.name == "sandy").values(fullname="Sandy Squirrel Extraordinaire"))
     return db_bank
 
 
