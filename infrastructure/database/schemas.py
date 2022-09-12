@@ -19,7 +19,12 @@ class BankBase(MyBaseModel):
 
 
 class BankCreate(BankBase):
-    pass
+    term_min: int
+    term_max: int
+    rate_min: float
+    rate_max: float
+    payment_min: int
+    payment_max: int
 
 
 class BankUpdate(BankBase):
@@ -33,6 +38,7 @@ class BankUpdate(BankBase):
 
 
 class Bank(BankBase):
+    id: int
     term_min: int
     term_max: int
     rate_min: float
