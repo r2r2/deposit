@@ -8,15 +8,18 @@ from core.errors.exceptions import InconsistencyError
 
 
 async def create_bank(bank: schemas.BankCreate) -> dict[str, ...]:
-    db_bank = await crud.get_bank_by_bank_name(bank.bank_name)
+    db_bank = await crud.get_bank_by_name(bank.bank_name)
     if db_bank:
         raise InconsistencyError(detail=f"Bank with name={bank.bank_name} already exists.")
     res = await crud.create_bank(bank)
+    print(res)
     return res
 
 
 async def read_banks(skip: int = 0, limit: int = 100) -> list[schemas.Bank]:
     banks = await crud.get_banks(skip=skip, limit=limit)
+    # for b in banks:
+    #     print("bank_name:", b.bank_name, "id:", b.id)
     return banks
 
 

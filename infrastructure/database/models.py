@@ -1,5 +1,4 @@
-import sqlalchemy
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Float
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Float, Table
 from sqlalchemy.orm import relationship
 
 from infrastructure.database.database import metadata  # , Base
@@ -7,17 +6,17 @@ from infrastructure.database.database import metadata  # , Base
 # class AbstractBaseModel(Base):
 #     id = Column(Integer, primary_key=True, index=True)
 
-banks = sqlalchemy.Table(
+banks = Table(
     "banks",
     metadata,
-    sqlalchemy.Column("id", Integer, primary_key=True, index=True),
-    sqlalchemy.Column("bank_name", String(255), unique=True, index=True),
-    sqlalchemy.Column("term_min", Integer, doc="Срок ипотеки, ОТ"),
-    sqlalchemy.Column("term_max", Integer, doc="Срок ипотеки, ДО"),
-    sqlalchemy.Column("rate_min", Float, doc="Ставка, ОТ"),
-    sqlalchemy.Column("rate_max", Float, doc="Ставка, ДО"),
-    sqlalchemy.Column("payment_min", Integer, doc="Сумма кредита, ОТ"),
-    sqlalchemy.Column("payment_max", Integer, doc="Сумма кредита, ДО"),
+    Column("id", Integer, primary_key=True, index=True),
+    Column("bank_name", String(255), unique=True, index=True),
+    Column("term_min", Integer, doc="Срок ипотеки, ОТ"),
+    Column("term_max", Integer, doc="Срок ипотеки, ДО"),
+    Column("rate_min", Float, doc="Ставка, ОТ"),
+    Column("rate_max", Float, doc="Ставка, ДО"),
+    Column("payment_min", Integer, doc="Сумма кредита, ОТ"),
+    Column("payment_max", Integer, doc="Сумма кредита, ДО"),
 )
 
 

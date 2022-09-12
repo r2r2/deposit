@@ -1,28 +1,30 @@
 from infrastructure.database.database import database
 from sqlalchemy import select, update, text
 from sqlalchemy.orm import Session, Query
+from sqlalchemy.sql import select, FromClause
+from sqlalchemy.sql.selectable import Select
+from sqlalchemy import Table
 
 from infrastructure.database import models, schemas
 
 
-# async def get_bank(db: Session, bank_id: int):
-#     # return db.query(models.Bank).filter(models.Bank.id == bank_id).first()
-#
-#     return db.query(models.Bank).filter(models.Bank.id == bank_id).first()
-#
-#
-# async def get_bank_by_bank_name(db: Session, bank_name: str) -> Query:
-#     return db.query(models.Bank).filter(models.Bank.bank_name == bank_name).first()
-
 async def get_bank(bank_id: int) -> schemas.Bank:
-    query = "SELECT * FROM deposit.banks WHERE deposit.banks.id = :id"
-    res = await database.fetch_one(query=query, values={"id": bank_id})
+    # query = "SELECT * FROM deposit.banks WHERE deposit.banks.id = :id"
+    # res = await database.fetch_one(query=query, values={"id": bank_id})
+    # query = models.banks.select()
+    # query = select(models.banks.c.id, models.banks.c.bank_name)
+    query = select(models.banks).where(models.banks.c.id == bank_id)
+    res = await database.fetch_one(query)
     return res
 
 
-async def get_bank_by_bank_name(bank_name: str) -> int:
-    query = "SELECT * FROM deposit.banks WHERE deposit.banks.bank_name = :bank_name"
-    return await database.execute(query, values={"bank_name": bank_name})
+async def get_bank_by_name(bank_name: str) -> int:
+    # query = "SELECT * FROM deposit.banks WHERE deposit.banks.bank_name = :bank_name"
+    query = select(models.banks).where(models.banks.c.bank_name == bank_name)
+    print(query)
+    print(type(query))  # <class 'sqlalchemy.sql.selectable.Select'>
+    # return await database.execute(query, values={"bank_name": bank_name})
+    return await database.fetch_one(query)
 
 
 async def get_banks(skip: int = 0, limit: int = 100) -> list[schemas.Bank]:
@@ -32,6 +34,7 @@ async def get_banks(skip: int = 0, limit: int = 100) -> list[schemas.Bank]:
 
 async def create_bank(bank: schemas.BankCreate) -> dict[str, ...]:
     query = models.banks.insert().values(**bank.dict())
+    # print(query.compile().params)
     last_record_id = await database.execute(query)
     return {**bank.dict(), "id": last_record_id}
 
@@ -56,6 +59,16 @@ async def update_bank(db_bank: models.banks, bank: schemas.BankUpdate):
     # db.refresh(db_bank)
     # session.execute(update(User).where(User.name == "sandy").values(fullname="Sandy Squirrel Extraordinaire"))
     # return db_bank
+
+
+# async def get_bank(db: Session, bank_id: int):
+#     # return db.query(models.Bank).filter(models.Bank.id == bank_id).first()
+#
+#     return db.query(models.Bank).filter(models.Bank.id == bank_id).first()
+#
+#
+# async def get_bank_by_bank_name(db: Session, bank_name: str) -> Query:
+#     return db.query(models.Bank).filter(models.Bank.bank_name == bank_name).first()
 
 
 # def create_bank(db: Session, bank: schemas.Bank):

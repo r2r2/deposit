@@ -1,4 +1,4 @@
-from infrastructure.database import models
+# from infrastructure.database import models
 # from infrastructure.database.database import SessionLocal, engine
 
 
