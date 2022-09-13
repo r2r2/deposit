@@ -46,9 +46,6 @@ class Bank(BankBase):
     payment_min: int
     payment_max: int
 
-    # class Config:
-    #     orm_mode = True
-
 
 class ItemBase(MyBaseModel):
     title: str
