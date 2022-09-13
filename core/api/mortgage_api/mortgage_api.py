@@ -34,9 +34,9 @@ async def read_bank(bank_id: int) -> schemas.Bank:
 async def patch_bank(bank_id: int, bank: schemas.BankUpdate):
     db_bank = await read_bank(bank_id)
 
-    res = await crud.update_bank(db_bank, bank)
+    await crud.update_bank(db_bank, bank)
 
-    return res
+    return db_bank
 
 # async def create_bank(bank: schemas.Bank, db: Session = Depends(get_db)):
 #     db_bank = crud.get_bank_by_bank_name(db, bank.bank_name)
