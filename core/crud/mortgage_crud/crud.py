@@ -33,7 +33,8 @@ async def update_bank(bank_id: int, bank: schemas.BankUpdate):
 
 async def check_exists(bank_id: int) -> bool:
     # query = exists(models.banks).where(models.banks.c.id == bank_id)
-    query = select(models.banks).where(models.banks.c.id == bank_id)
+    # query = select(models.banks.c.id).where(exists(select(models.banks.c.id).where(models.banks.c.id == bank_id)))
+    query = select(models.banks.c.id).where(exists(models.banks.c.id == bank_id))
     # query = models.banks
     print(query)
     res = await database.execute(query)
