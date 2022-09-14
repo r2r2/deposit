@@ -22,20 +22,8 @@ async def read_bank(bank_id: int) -> schemas.Bank:
     return db_bank
 
 
-async def patch_bank(bank_id: int, bank: schemas.BankUpdate):
-    if await crud.check_exists(bank_id):
-        raise InconsistencyError(detail="CHECKED!!")
-    db_bank = await read_bank(bank_id)
-
-    # await crud.update_bank(bank_id, bank)
+async def patch_bank(bank_id: int, bank: schemas.BankUpdate) -> schemas.Bank:
+    if not await crud.check_exists(bank_id):
+        raise InconsistencyError(detail=f"Bank with id={bank_id} not found.")
     await crud.update_bank(bank_id, bank)
-    # db_bank = await read_bank(bank_id)
-
-    return db_bank
-
-
-# async def check_exists(bank_id: int) -> bool:
-#     if await crud.check_exist(bank_id):
-#         return True
-#     return False
-
+    return await read_bank(bank_id)

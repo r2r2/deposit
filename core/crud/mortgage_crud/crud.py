@@ -1,5 +1,5 @@
 from infrastructure.database.database import database
-from sqlalchemy.sql import select, exists, update
+from sqlalchemy.sql import select, exists
 from infrastructure.database import models, schemas
 
 
@@ -26,17 +26,11 @@ async def create_bank(bank: schemas.BankCreate) -> dict[str, ...]:
 
 
 @database.transaction()
-async def update_bank(bank_id: int, bank: schemas.BankUpdate):
+async def update_bank(bank_id: int, bank: schemas.BankUpdate) -> None:
     query = models.banks.update().where(models.banks.c.id == bank_id).values(**bank.dict(exclude_none=True))
     await database.execute(query)
 
 
 async def check_exists(bank_id: int) -> bool:
-    # query = exists(models.banks).where(models.banks.c.id == bank_id)
-    # query = select(models.banks.c.id).where(exists(select(models.banks.c.id).where(models.banks.c.id == bank_id)))
-    query = select(models.banks.c.id).where(exists(models.banks.c.id == bank_id))
-    # query = models.banks
-    print(query)
-    res = await database.execute(query)
-    print(res)
-    return res
+    query = select(exists(select(models.banks.c.id).where(models.banks.c.id == bank_id)))
+    return await database.execute(query)
