@@ -1,15 +1,13 @@
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Float, Table
 from sqlalchemy.orm import relationship
 
-from infrastructure.database.database import metadata  # , Base
+from infrastructure.database.database import metadata
 
-# class AbstractBaseModel(Base):
-#     id = Column(Integer, primary_key=True, index=True)
 
 banks = Table(
     "banks",
     metadata,
-    Column("id", Integer, primary_key=True, index=True),
+    Column("id", Integer, primary_key=True, index=True, autoincrement=True),
     Column("bank_name", String(255), unique=True, index=True),
     Column("term_min", Integer, doc="Срок ипотеки, ОТ"),
     Column("term_max", Integer, doc="Срок ипотеки, ДО"),

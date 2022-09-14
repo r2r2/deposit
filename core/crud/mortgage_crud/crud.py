@@ -13,9 +13,19 @@ async def get_bank_by_name(bank_name: str) -> int:
     return await database.fetch_one(query)
 
 
-async def get_banks(skip: int = 0, limit: int = 100) -> list[schemas.Bank]:
-    query = models.banks.select().limit(limit).offset(skip)
+async def get_banks(offset: int = 0, limit: int = 100) -> list[schemas.Bank]:
+    query = models.banks.select().limit(limit).offset(offset)
     return await database.fetch_all(query)
+
+
+async def get_offer(price: int | None = None, deposit: int | None = None, term: int | None = None,
+                    rate_min: int | None = None, rate_max: int | None = None, payment_min: int | None = None,
+                    payment_max: int | None = None, order: str | None = "-rate") -> list[schemas.BankPayment]:
+    query = select(models.banks).where(models.banks.c.rate_min > rate_min)
+    print(query)
+    return await database.fetch_all(query)
+
+
 
 
 @database.transaction()
@@ -28,6 +38,12 @@ async def create_bank(bank: schemas.BankCreate) -> dict[str, ...]:
 @database.transaction()
 async def update_bank(bank_id: int, bank: schemas.BankUpdate) -> None:
     query = models.banks.update().where(models.banks.c.id == bank_id).values(**bank.dict(exclude_none=True))
+    await database.execute(query)
+
+
+@database.transaction()
+async def delete_bank(bank_id: int) -> None:
+    query = models.banks.delete().where(models.banks.c.id == bank_id)
     await database.execute(query)
 
 

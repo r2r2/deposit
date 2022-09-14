@@ -1,6 +1,7 @@
 from core.crud.mortgage_crud import crud
 from infrastructure.database import schemas
 from core.errors.exceptions import InconsistencyError
+from fastapi import Query
 
 
 async def create_bank(bank: schemas.BankCreate) -> dict[str, ...]:
@@ -10,8 +11,19 @@ async def create_bank(bank: schemas.BankCreate) -> dict[str, ...]:
     return await crud.create_bank(bank)
 
 
-async def read_banks(skip: int = 0, limit: int = 100) -> list[schemas.Bank]:
-    banks = await crud.get_banks(skip=skip, limit=limit)
+async def read_banks(price: int | None = Query(default=None, le=100_000_000, description="Цена объекта недвижимости"),
+                     deposit: int | None = Query(default=None, le=100, description="Первоночальный взнос в процентах"),
+                     term: int | None = Query(default=None, le=70, description="Количество лет ипотечного рабства"),
+                     rate_min: int | None = Query(default=None, ge=0, description="Минимальный процент"),
+                     rate_max: int | None = Query(default=None, lt=100, description="Максимальный процент"),
+                     payment_min: int | None = Query(default=None, ge=0, description="Минимальный платеж"),
+                     payment_max: int | None = Query(default=None, le=100_000_000, description="Максимальный платеж"),
+                     order: str | None = Query(default="-rate", description="Сортировка по полю"),
+                     offset: int = 0, limit: int = 100) -> list[schemas.Bank]:
+    if any((price, deposit, term, rate_min, rate_max, payment_min, payment_max)):
+        banks = await crud.get_offer(price, deposit, term, rate_min, rate_max, payment_min, payment_max, order)
+        return banks
+    banks = await crud.get_banks(offset=offset, limit=limit)
     return banks
 
 
@@ -27,3 +39,10 @@ async def patch_bank(bank_id: int, bank: schemas.BankUpdate) -> schemas.Bank:
         raise InconsistencyError(detail=f"Bank with id={bank_id} not found.")
     await crud.update_bank(bank_id, bank)
     return await read_bank(bank_id)
+
+
+async def delete_bank(bank_id: int) -> dict[str, str]:
+    if not await crud.check_exists(bank_id):
+        raise InconsistencyError(detail=f"Bank with id={bank_id} not found.")
+    await crud.delete_bank(bank_id)
+    return {"message": f"Bank with id={bank_id} was successfully deleted from database."}

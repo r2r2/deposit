@@ -45,6 +45,11 @@ class Bank(BankBase):
     rate_max: float
     payment_min: int
     payment_max: int
+    payment: int | None
+
+
+class BankPayment(Bank):
+    payment: int
 
 
 class ItemBase(MyBaseModel):
