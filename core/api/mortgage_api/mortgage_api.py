@@ -4,7 +4,7 @@ from core.errors.exceptions import InconsistencyError
 from fastapi import Query
 
 
-async def create_bank(bank: schemas.BankCreate) -> dict[str, ...]:
+async def create_bank(bank: schemas.BankBase) -> dict[str, ...]:
     db_bank = await crud.get_bank_by_name(bank.bank_name)
     if db_bank:
         raise InconsistencyError(detail=f"Bank with name={bank.bank_name} already exists.")
@@ -14,15 +14,15 @@ async def create_bank(bank: schemas.BankCreate) -> dict[str, ...]:
 async def read_banks(price: int | None = Query(default=None, le=100_000_000, description="Цена объекта недвижимости"),
                      deposit: int | None = Query(default=None, le=100, description="Первоночальный взнос в процентах"),
                      term: int | None = Query(default=None, le=70, description="Количество лет ипотечного рабства"),
-                     rate_min: int | None = Query(default=None, ge=0, description="Минимальный процент"),
-                     rate_max: int | None = Query(default=None, lt=100, description="Максимальный процент"),
                      payment_min: int | None = Query(default=None, ge=0, description="Минимальный платеж"),
                      payment_max: int | None = Query(default=None, le=100_000_000, description="Максимальный платеж"),
-                     order: str | None = Query(default="-rate", description="Сортировка по полю"),
-                     offset: int = 0, limit: int = 100) -> list[schemas.Bank]:
-    if any((price, deposit, term, rate_min, rate_max, payment_min, payment_max)):
-        banks = await crud.get_offer(price, deposit, term, rate_min, rate_max, payment_min, payment_max, order)
+                     order: str | None = Query(default="payment", description="Сортировка по полю"),
+                     offset: int = 0, limit: int = 100) -> list[dict[str, ...] | schemas.BankAll]:
+
+    if any((price, deposit, term)):
+        banks = await crud.get_offer(price, deposit, term, order, payment_min, payment_max, limit, offset)
         return banks
+
     banks = await crud.get_banks(offset=offset, limit=limit)
     return banks
 
