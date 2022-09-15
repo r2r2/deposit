@@ -1,5 +1,5 @@
 from core.api.mortgage_api.mortgage_api import *
-from core.server.api import calculate
+from core.api.calculate_api.api import calculate
 
 controllers = (
     # ----------------------------------------Calculate deposit--------------------------------------------

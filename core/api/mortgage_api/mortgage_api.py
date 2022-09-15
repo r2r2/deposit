@@ -1,5 +1,6 @@
 from core.crud.mortgage_crud import crud
 from infrastructure.database import schemas
+from core.api.mortgage_api import service
 from core.errors.exceptions import InconsistencyError
 from fastapi import Query
 
@@ -20,7 +21,7 @@ async def read_banks(price: int | None = Query(default=None, le=100_000_000, des
                      offset: int = 0, limit: int = 100) -> list[dict[str, ...] | schemas.BankAll]:
 
     if any((price, deposit, term)):
-        banks = await crud.get_offer(price, deposit, term, order, payment_min, payment_max, limit, offset)
+        banks = await service.get_offer(price, deposit, term, order, payment_min, payment_max, limit, offset)
         return banks
 
     banks = await crud.get_banks(offset=offset, limit=limit)
