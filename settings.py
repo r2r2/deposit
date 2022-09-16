@@ -22,6 +22,7 @@ class Settings(BaseSettings):
     POSTGRES_USER: str
     POSTGRES_PASSWORD: str
     POSTGRES_DB: str
+    POSTGRES_SCHEMA: str
     SQLALCHEMY_DATABASE_URI: PostgresDsn | None = None
     TEST_DATABASE_URL: str
 
